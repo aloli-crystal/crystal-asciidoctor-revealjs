@@ -1,0 +1,18 @@
+= Installation
+
+Ajoutez dans votre `shard.yml` :
+
+[source,yaml]
+----
+dependencies:
+  crystal-asciidoctor-revealjs:
+    github: aloli-crystal/crystal-asciidoctor-revealjs
+    version: "~> 5.2"
+----
+
+Puis lancez :
+
+[source,bash]
+----
+shards install
+----

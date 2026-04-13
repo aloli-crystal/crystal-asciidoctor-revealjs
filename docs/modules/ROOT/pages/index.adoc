@@ -1,0 +1,17 @@
+= Crystal Asciidoctor Reveal.js
+
+Crystal port of the https://github.com/asciidoctor/asciidoctor-reveal.js[asciidoctor-reveal.js] Ruby gem (v5.2.0). Converts AsciiDoc documents into https://revealjs.com[reveal.js] HTML presentations.
+
+== Features
+
+* Convert AsciiDoc to reveal.js presentations
+* Level 1 sections (`==`) become horizontal slides
+* Level 2 sections (`===`) become vertical slides
+* Speaker notes, fragments (incremental reveal), background images
+* 11 built-in themes: black, white, league, beige, sky, night, serif, simple, solarized, moon, dracula
+* Configurable transitions: slide, fade, convex, concave, zoom, none
+* Library API and CLI
+
+== License
+
+MIT

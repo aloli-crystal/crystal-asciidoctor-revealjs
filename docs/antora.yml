@@ -1,0 +1,6 @@
+name: crystal-asciidoctor-revealjs
+title: 'Crystal Asciidoctor Reveal.js'
+version: '5.2.0'
+nav:
+  - modules/ROOT/nav.adoc
+  - modules/fr/nav.adoc

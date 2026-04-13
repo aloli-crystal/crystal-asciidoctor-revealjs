@@ -1,0 +1,77 @@
+= Usage
+
+== CLI
+
+[source,bash]
+----
+crystal-asciidoctor-revealjs presentation.adoc
+# => generates presentation.html
+
+crystal-asciidoctor-revealjs -o output.html presentation.adoc
+----
+
+== Library
+
+[source,crystal]
+----
+require "crystal-asciidoctor-revealjs"
+
+doc = Asciidoctor.load_file("presentation.adoc", {
+  "backend" => "revealjs",
+  "safe"    => "safe",
+})
+doc.options["standalone"] = true
+html = doc.convert
+File.write("presentation.html", html) if html
+----
+
+== AsciiDoc Attributes
+
+[cols="1,1,1"]
+|===
+| Attribute | Default | Description
+
+| `:revealjs_theme:` | `black` | Theme name
+| `:revealjs_customtheme:` | (none) | URL to a custom CSS theme
+| `:revealjs_transition:` | `slide` | Slide transition
+| `:revealjs_width:` | (default) | Presentation width in pixels
+| `:revealjs_height:` | (default) | Presentation height in pixels
+| `:revealjs_controls:` | `true` | Show navigation controls
+| `:revealjs_progress:` | `true` | Show progress bar
+| `:revealjs_history:` | `false` | Push each slide to browser history
+| `:revealjsdir:` | CDN (5.1.0) | Path or URL to reveal.js distribution
+|===
+
+== Speaker Notes
+
+[source,asciidoc]
+----
+== My Slide
+
+Visible content
+
+[.notes]
+--
+These notes are only visible in speaker view.
+--
+----
+
+== Fragments
+
+[source,asciidoc]
+----
+[%step]
+* First item appears
+* Then this one
+* And finally this
+----
+
+== Background Images
+
+[source,asciidoc]
+----
+[background-image="sunset.jpg"]
+== Slide with Background
+
+Content here
+----

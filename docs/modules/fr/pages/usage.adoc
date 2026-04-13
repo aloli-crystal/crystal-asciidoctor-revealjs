@@ -1,0 +1,53 @@
+= Utilisation
+
+== CLI
+
+[source,bash]
+----
+crystal-asciidoctor-revealjs presentation.adoc
+# => genere presentation.html
+
+crystal-asciidoctor-revealjs -o sortie.html presentation.adoc
+----
+
+== Bibliotheque
+
+[source,crystal]
+----
+require "crystal-asciidoctor-revealjs"
+
+doc = Asciidoctor.load_file("presentation.adoc", {
+  "backend" => "revealjs",
+  "safe"    => "safe",
+})
+doc.options["standalone"] = true
+html = doc.convert
+File.write("presentation.html", html) if html
+----
+
+== Attributs AsciiDoc
+
+[cols="1,1,1"]
+|===
+| Attribut | Defaut | Description
+
+| `:revealjs_theme:` | `black` | Nom du theme
+| `:revealjs_transition:` | `slide` | Transition entre les slides
+| `:revealjs_controls:` | `true` | Afficher les controles de navigation
+| `:revealjs_progress:` | `true` | Afficher la barre de progression
+| `:revealjsdir:` | CDN (5.1.0) | Chemin ou URL vers reveal.js
+|===
+
+== Notes du Presentateur
+
+[source,asciidoc]
+----
+== Mon Slide
+
+Contenu visible
+
+[.notes]
+--
+Ces notes ne sont visibles que dans la vue presentateur.
+--
+----

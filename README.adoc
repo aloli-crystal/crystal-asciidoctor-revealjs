@@ -1,0 +1,147 @@
+= crystal-asciidoctor-revealjs
+:url-revealjs: https://revealjs.com
+:url-upstream: https://github.com/asciidoctor/asciidoctor-reveal.js
+
+Crystal port of the {url-upstream}[asciidoctor-reveal.js] Ruby gem (v5.2.0).
+
+Converts AsciiDoc documents into {url-revealjs}[reveal.js] HTML presentations.
+
+== Installation
+
+Add to your `shard.yml`:
+
+[source,yaml]
+----
+dependencies:
+  crystal-asciidoctor-revealjs:
+    github: aloli-crystal/crystal-asciidoctor-revealjs
+    version: "~> 5.2"
+----
+
+Then run:
+
+[source,bash]
+----
+shards install
+----
+
+== Usage
+
+=== CLI
+
+[source,bash]
+----
+crystal-asciidoctor-revealjs presentation.adoc
+# => generates presentation.html
+
+crystal-asciidoctor-revealjs -o output.html presentation.adoc
+----
+
+=== Library
+
+[source,crystal]
+----
+require "crystal-asciidoctor-revealjs"
+
+doc = Asciidoctor.load_file("presentation.adoc", {
+  "backend" => "revealjs",
+  "safe"    => "safe",
+})
+doc.options["standalone"] = true
+html = doc.convert
+File.write("presentation.html", html) if html
+----
+
+== AsciiDoc Attributes
+
+[cols="1,1,1"]
+|===
+| Attribute | Default | Description
+
+| `:revealjs_theme:`
+| `black`
+| reveal.js theme name (black, white, league, beige, sky, night, serif, simple, solarized, moon, dracula)
+
+| `:revealjs_customtheme:`
+| (none)
+| URL to a custom CSS theme
+
+| `:revealjs_transition:`
+| `slide`
+| Slide transition (slide, fade, convex, concave, zoom, none)
+
+| `:revealjs_width:`
+| (default)
+| Presentation width in pixels
+
+| `:revealjs_height:`
+| (default)
+| Presentation height in pixels
+
+| `:revealjs_controls:`
+| `true`
+| Show navigation controls
+
+| `:revealjs_progress:`
+| `true`
+| Show progress bar
+
+| `:revealjs_history:`
+| `false`
+| Push each slide change to browser history
+
+| `:revealjsdir:`
+| CDN (5.1.0)
+| Path or URL to reveal.js distribution
+|===
+
+== Slide Structure
+
+* Level 1 sections (`==`) become horizontal slides
+* Level 2 sections (`===`) become vertical slides (nested within their parent)
+
+== Speaker Notes
+
+[source,asciidoc]
+----
+== My Slide
+
+Visible content
+
+[.notes]
+--
+These notes are only visible in speaker view.
+--
+----
+
+== Fragments (Incremental Reveal)
+
+[source,asciidoc]
+----
+[%step]
+* First item appears
+* Then this one
+* And finally this
+----
+
+== Background Images
+
+[source,asciidoc]
+----
+[background-image="sunset.jpg"]
+== Slide with Background
+
+Content here
+----
+
+== Development
+
+[source,bash]
+----
+shards install
+crystal spec
+----
+
+== License
+
+MIT -- see link:LICENSE[].

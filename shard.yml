@@ -1,0 +1,29 @@
+name: crystal-asciidoctor-revealjs
+version: 5.2.0
+
+description: |
+  AsciiDoc to reveal.js HTML presentation converter for Crystal.
+  Equivalent of the asciidoctor-reveal.js Ruby gem (v5.2.0).
+  Depends on crystal-asciidoctor (parser/AST).
+  Ported from Ruby asciidoctor-revealjs 5.2.0.
+
+authors:
+  - Philippe Nénert <philippe@aloli.fr>
+
+license: MIT
+
+dependencies:
+  crystal-asciidoctor:
+    github: aloli-crystal/crystal-asciidoctor
+    version: "~> 2.0"
+
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: "~> 1.6"
+
+targets:
+  crystal-asciidoctor-revealjs:
+    main: bin/crystal-asciidoctor-revealjs
+
+crystal: ">= 1.19.0"

@@ -1,0 +1,147 @@
+= crystal-asciidoctor-revealjs
+:url-revealjs: https://revealjs.com
+:url-upstream: https://github.com/asciidoctor/asciidoctor-reveal.js
+
+Portage Crystal de la gem Ruby {url-upstream}[asciidoctor-reveal.js] (v5.2.0).
+
+Convertit des documents AsciiDoc en presentations HTML {url-revealjs}[reveal.js].
+
+== Installation
+
+Ajoutez dans votre `shard.yml` :
+
+[source,yaml]
+----
+dependencies:
+  crystal-asciidoctor-revealjs:
+    github: aloli-crystal/crystal-asciidoctor-revealjs
+    version: "~> 5.2"
+----
+
+Puis lancez :
+
+[source,bash]
+----
+shards install
+----
+
+== Utilisation
+
+=== CLI
+
+[source,bash]
+----
+crystal-asciidoctor-revealjs presentation.adoc
+# => genere presentation.html
+
+crystal-asciidoctor-revealjs -o sortie.html presentation.adoc
+----
+
+=== Bibliotheque
+
+[source,crystal]
+----
+require "crystal-asciidoctor-revealjs"
+
+doc = Asciidoctor.load_file("presentation.adoc", {
+  "backend" => "revealjs",
+  "safe"    => "safe",
+})
+doc.options["standalone"] = true
+html = doc.convert
+File.write("presentation.html", html) if html
+----
+
+== Attributs AsciiDoc
+
+[cols="1,1,1"]
+|===
+| Attribut | Defaut | Description
+
+| `:revealjs_theme:`
+| `black`
+| Nom du theme reveal.js (black, white, league, beige, sky, night, serif, simple, solarized, moon, dracula)
+
+| `:revealjs_customtheme:`
+| (aucun)
+| URL vers un theme CSS personnalise
+
+| `:revealjs_transition:`
+| `slide`
+| Transition entre les slides (slide, fade, convex, concave, zoom, none)
+
+| `:revealjs_width:`
+| (defaut)
+| Largeur de la presentation en pixels
+
+| `:revealjs_height:`
+| (defaut)
+| Hauteur de la presentation en pixels
+
+| `:revealjs_controls:`
+| `true`
+| Afficher les controles de navigation
+
+| `:revealjs_progress:`
+| `true`
+| Afficher la barre de progression
+
+| `:revealjs_history:`
+| `false`
+| Ajouter chaque changement de slide dans l'historique du navigateur
+
+| `:revealjsdir:`
+| CDN (5.1.0)
+| Chemin ou URL vers la distribution reveal.js
+|===
+
+== Structure des Slides
+
+* Les sections de niveau 1 (`==`) deviennent des slides horizontales
+* Les sections de niveau 2 (`===`) deviennent des slides verticales (imbriquees dans leur parent)
+
+== Notes du Presentateur
+
+[source,asciidoc]
+----
+== Mon Slide
+
+Contenu visible
+
+[.notes]
+--
+Ces notes ne sont visibles que dans la vue presentateur.
+--
+----
+
+== Fragments (Apparition Progressive)
+
+[source,asciidoc]
+----
+[%step]
+* Premier element apparait
+* Puis celui-ci
+* Et enfin celui-la
+----
+
+== Images de Fond
+
+[source,asciidoc]
+----
+[background-image="coucher-soleil.jpg"]
+== Slide avec Fond
+
+Contenu ici
+----
+
+== Developpement
+
+[source,bash]
+----
+shards install
+crystal spec
+----
+
+== Licence
+
+MIT -- voir link:LICENSE[].

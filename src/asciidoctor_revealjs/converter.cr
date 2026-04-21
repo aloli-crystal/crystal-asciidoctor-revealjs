@@ -219,7 +219,7 @@ module AsciidoctorRevealjs
 
     private def convert_section_node(section : Asciidoctor::Section) : String
       level = section.level
-      has_subsections = section.blocks.any? { |b| b.is_a?(Asciidoctor::Section) }
+      has_subsections = section.blocks.any?(Asciidoctor::Section)
       section_attrs = build_section_attrs(section)
 
       String.build do |io|

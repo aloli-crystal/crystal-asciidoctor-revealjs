@@ -1,0 +1,9 @@
+= Changelog
+:toc: left
+:toc-title: Versions
+:toclevels: 2
+
+== v5.2.0.1 — 2026-04-22
+
+* Add the *ameba* linter to the CI pipeline with a shared `.ameba.yml` config aligned with the Crystal ecosystem.
+* Fix `Style/IsAFilter` violation: replace `any? { |b| b.is_a?(T) }` with `any?(T)` in `converter.cr`.

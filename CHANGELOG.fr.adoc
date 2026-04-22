@@ -1,0 +1,9 @@
+= Journal des modifications
+:toc: left
+:toc-title: Versions
+:toclevels: 2
+
+== v5.2.0.1 — 2026-04-22
+
+* Ajout du linter *ameba* à la CI avec configuration `.ameba.yml` partagée alignée sur l'écosystème Crystal.
+* Correction d'une occurrence de `Style/IsAFilter` : remplacement de `any? { |b| b.is_a?(T) }` par `any?(T)` dans `converter.cr`.

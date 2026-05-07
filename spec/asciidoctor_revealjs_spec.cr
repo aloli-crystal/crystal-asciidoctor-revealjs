@@ -375,7 +375,7 @@ describe AsciidoctorRevealjs::Converter do
 
   describe "version" do
     it "has correct version" do
-      AsciidoctorRevealjs::VERSION.should eq("5.2.0")
+      AsciidoctorRevealjs::VERSION.should eq("5.2.0.2")
     end
   end
 end

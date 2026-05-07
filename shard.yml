@@ -1,5 +1,5 @@
 name: crystal-asciidoctor-revealjs
-version: 5.2.0.1
+version: 5.2.0.2
 
 description: |
   AsciiDoc to reveal.js HTML presentation converter for Crystal.

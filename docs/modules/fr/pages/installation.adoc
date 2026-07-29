@@ -5,8 +5,8 @@ Ajoutez dans votre `shard.yml` :
 [source,yaml]
 ----
 dependencies:
-  crystal-asciidoctor-revealjs:
-    github: aloli-crystal/crystal-asciidoctor-revealjs
+  asciicrystal-revealjs:
+    github: aloli-crystal/asciicrystal-revealjs
     version: "~> 5.2"
 ----
 

@@ -3,6 +3,12 @@
 :toc-title: Versions
 :toclevels: 2
 
+== v5.2.0.3 — 2026-07-28
+
+* Rename the shard `crystal-asciidoctor-revealjs` → `asciicrystal-revealjs` (drop the `crystal-` prefix, turn `doctor` into `crystal`).
+* Rename the module `AsciidoctorRevealjs` → `AsciicrystalRevealjs`; the core namespace `Asciidoctor::` becomes `Asciicrystal::` via the `asciicrystal` dependency (formerly `crystal-asciidoctor`, `~> 2.0.26.12`).
+* Restore the CLI source `bin/asciicrystal-revealjs` (a compiled binary had been committed over it) and untrack the built artifact. Ruby-provenance mentions of the `asciidoctor-reveal.js` gem are preserved.
+
 == v5.2.0.1 — 2026-04-22
 
 * Add the *ameba* linter to the CI pipeline with a shared `.ameba.yml` config aligned with the Crystal ecosystem.

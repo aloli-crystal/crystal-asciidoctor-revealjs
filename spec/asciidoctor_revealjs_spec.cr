@@ -2,9 +2,9 @@ require "./spec_helper"
 
 # Helper to load and convert an AsciiDoc source string using the revealjs converter.
 private def convert(source : String, standalone : Bool = true) : String
-  doc = Asciidoctor.load(source, {"safe" => "safe"})
+  doc = Asciicrystal.load(source, {"safe" => "safe"})
   # Replace the default HTML5 converter with our revealjs converter
-  converter = AsciidoctorRevealjs::Converter.new
+  converter = AsciicrystalRevealjs::Converter.new
   doc.converter = converter
   if standalone
     doc.options["standalone"] = true
@@ -19,7 +19,7 @@ private def convert_embedded(source : String) : String
   convert(source, standalone: false)
 end
 
-describe AsciidoctorRevealjs::Converter do
+describe AsciicrystalRevealjs::Converter do
   describe "standalone document" do
     it "generates a complete HTML document with reveal.js scripts" do
       input = <<-ADOC
@@ -375,7 +375,7 @@ describe AsciidoctorRevealjs::Converter do
 
   describe "version" do
     it "has correct version" do
-      AsciidoctorRevealjs::VERSION.should eq("5.2.0.2")
+      AsciicrystalRevealjs::VERSION.should eq("5.2.0.3")
     end
   end
 end

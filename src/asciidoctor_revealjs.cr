@@ -1,7 +1,7 @@
-require "crystal-asciidoctor"
+require "asciicrystal"
 require "./asciidoctor_revealjs/converter"
 
-module AsciidoctorRevealjs
+module AsciicrystalRevealjs
   # Lue au compile-time depuis `shard.yml` via le macro `read_file`.
   # Cf. note mémoire `feedback_shard_version_macro.md` (mémoire ALOLI).
   VERSION = {{

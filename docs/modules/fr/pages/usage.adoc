@@ -4,17 +4,17 @@
 
 [source,bash]
 ----
-crystal-asciidoctor-revealjs presentation.adoc
+asciicrystal-revealjs presentation.adoc
 # => genere presentation.html
 
-crystal-asciidoctor-revealjs -o sortie.html presentation.adoc
+asciicrystal-revealjs -o sortie.html presentation.adoc
 ----
 
 == Bibliotheque
 
 [source,crystal]
 ----
-require "crystal-asciidoctor-revealjs"
+require "asciicrystal-revealjs"
 
 doc = Asciidoctor.load_file("presentation.adoc", {
   "backend" => "revealjs",

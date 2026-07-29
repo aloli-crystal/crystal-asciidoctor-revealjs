@@ -1,13 +1,13 @@
-require "crystal-asciidoctor"
+require "asciicrystal"
 require "html"
 
-module AsciidoctorRevealjs
+module AsciicrystalRevealjs
   # Converts an AsciiDoc document to a reveal.js HTML presentation.
   #
   # Registered for the "revealjs" backend so that:
-  #   Asciidoctor.load(source, {"backend" => "revealjs"})
+  #   Asciicrystal.load(source, {"backend" => "revealjs"})
   # automatically selects this converter.
-  class Converter < Asciidoctor::Converter::Base
+  class Converter < Asciicrystal::Converter::Base
     register_for "revealjs"
 
     # ------------------------------------------------------------------ #
@@ -37,12 +37,12 @@ module AsciidoctorRevealjs
     # Main entry point
     # ------------------------------------------------------------------ #
 
-    def convert(node : Asciidoctor::AbstractNode, transform : String? = nil) : String
+    def convert(node : Asciicrystal::AbstractNode, transform : String? = nil) : String
       transform ||= node.node_name
       dispatch(node, transform)
     end
 
-    def dispatch(node : Asciidoctor::AbstractNode, transform : String) : String
+    def dispatch(node : Asciicrystal::AbstractNode, transform : String) : String
       case transform
       when "document"         then convert_document(node)
       when "embedded"         then convert_embedded(node)
@@ -89,8 +89,8 @@ module AsciidoctorRevealjs
     # Document
     # ------------------------------------------------------------------ #
 
-    private def convert_document(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Document)
+    private def convert_document(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Document)
       doc = node
 
       revealjs_dir = s_attr(doc, "revealjsdir", DEFAULT_REVEALJS_DIR)
@@ -173,8 +173,8 @@ module AsciidoctorRevealjs
     # Embedded (slides content only, no HTML wrapper)
     # ------------------------------------------------------------------ #
 
-    private def convert_embedded(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Document)
+    private def convert_embedded(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Document)
       doc = node
 
       String.build do |io|
@@ -193,7 +193,7 @@ module AsciidoctorRevealjs
         end
 
         # Preamble (content before first section)
-        preamble_blocks = doc.blocks.take_while { |b| !b.is_a?(Asciidoctor::Section) }
+        preamble_blocks = doc.blocks.take_while { |b| !b.is_a?(Asciicrystal::Section) }
         if preamble_blocks.size > 0
           io << "<section>\n"
           preamble_blocks.each { |b| io << b.convert << "\n" }
@@ -202,7 +202,7 @@ module AsciidoctorRevealjs
 
         # Sections
         doc.blocks.each do |block|
-          next unless block.is_a?(Asciidoctor::Section)
+          next unless block.is_a?(Asciicrystal::Section)
           io << convert_section_node(block)
         end
       end
@@ -212,14 +212,14 @@ module AsciidoctorRevealjs
     # Section -> <section> slides
     # ------------------------------------------------------------------ #
 
-    private def convert_section(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Section)
+    private def convert_section(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Section)
       convert_section_node(node)
     end
 
-    private def convert_section_node(section : Asciidoctor::Section) : String
+    private def convert_section_node(section : Asciicrystal::Section) : String
       level = section.level
-      has_subsections = section.blocks.any?(Asciidoctor::Section)
+      has_subsections = section.blocks.any?(Asciicrystal::Section)
       section_attrs = build_section_attrs(section)
 
       String.build do |io|
@@ -234,7 +234,7 @@ module AsciidoctorRevealjs
           io << "</section>\n"
 
           section.blocks.each do |block|
-            next unless block.is_a?(Asciidoctor::Section)
+            next unless block.is_a?(Asciicrystal::Section)
             io << convert_section_node(block)
           end
 
@@ -245,7 +245,7 @@ module AsciidoctorRevealjs
           append_non_section_blocks(io, section)
 
           section.blocks.each do |block|
-            next unless block.is_a?(Asciidoctor::Section)
+            next unless block.is_a?(Asciicrystal::Section)
             io << convert_section_node(block)
           end
 
@@ -254,7 +254,7 @@ module AsciidoctorRevealjs
       end
     end
 
-    private def build_section_attrs(section : Asciidoctor::Section) : String
+    private def build_section_attrs(section : Asciicrystal::Section) : String
       parts = [] of String
 
       if (id = section.id)
@@ -283,7 +283,7 @@ module AsciidoctorRevealjs
       parts.join
     end
 
-    private def append_slide_title(io : IO, section : Asciidoctor::Section) : Nil
+    private def append_slide_title(io : IO, section : Asciicrystal::Section) : Nil
       return if section.option?("notitle")
       if (title = section.title)
         h = {section.level, 6}.min
@@ -291,9 +291,9 @@ module AsciidoctorRevealjs
       end
     end
 
-    private def append_non_section_blocks(io : IO, section : Asciidoctor::Section) : Nil
+    private def append_non_section_blocks(io : IO, section : Asciicrystal::Section) : Nil
       section.blocks.each do |block|
-        next if block.is_a?(Asciidoctor::Section)
+        next if block.is_a?(Asciicrystal::Section)
         io << block.convert << "\n"
       end
     end
@@ -302,14 +302,14 @@ module AsciidoctorRevealjs
     # Paragraph
     # ------------------------------------------------------------------ #
 
-    private def convert_paragraph(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::AbstractBlock)
+    private def convert_paragraph(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::AbstractBlock)
       block = node
       id_a = id_attr(node)
       frag = fragment_attr(node)
       role = node.role
       cls = role ? %( class="#{esc(role)}") : ""
-      content = block.is_a?(Asciidoctor::Block) ? (block.content || "") : ""
+      content = block.is_a?(Asciicrystal::Block) ? (block.content || "") : ""
       "<p#{id_a}#{cls}#{frag}>#{content}</p>"
     end
 
@@ -317,16 +317,16 @@ module AsciidoctorRevealjs
     # Lists
     # ------------------------------------------------------------------ #
 
-    private def convert_ulist(node : Asciidoctor::AbstractNode) : String
+    private def convert_ulist(node : Asciicrystal::AbstractNode) : String
       convert_list_node(node, "ul")
     end
 
-    private def convert_olist(node : Asciidoctor::AbstractNode) : String
+    private def convert_olist(node : Asciicrystal::AbstractNode) : String
       convert_list_node(node, "ol")
     end
 
-    private def convert_list_node(node : Asciidoctor::AbstractNode, tag : String) : String
-      return "" unless node.is_a?(Asciidoctor::List)
+    private def convert_list_node(node : Asciicrystal::AbstractNode, tag : String) : String
+      return "" unless node.is_a?(Asciicrystal::List)
       list = node
       id_a = id_attr(node)
       role = node.role
@@ -336,7 +336,7 @@ module AsciidoctorRevealjs
       String.build do |io|
         io << "<" << tag << id_a << cls << frag << ">\n"
         list.items.each do |item|
-          next unless item.is_a?(Asciidoctor::ListItem)
+          next unless item.is_a?(Asciicrystal::ListItem)
           ifrag = fragment_attr(item)
           text = item.text || ""
           io << "<li" << ifrag << ">" << text
@@ -350,8 +350,8 @@ module AsciidoctorRevealjs
       end
     end
 
-    private def convert_dlist(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::List)
+    private def convert_dlist(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::List)
       list = node
       id_a = id_attr(node)
       frag = fragment_attr(node)
@@ -359,7 +359,7 @@ module AsciidoctorRevealjs
       String.build do |io|
         io << "<dl" << id_a << frag << ">\n"
         list.items.each do |item|
-          next unless item.is_a?(Asciidoctor::ListItem)
+          next unless item.is_a?(Asciicrystal::ListItem)
           io << "<dt>" << (item.text || "") << "</dt>\n"
           item.blocks.each { |b| io << "<dd>" << b.convert << "</dd>\n" }
         end
@@ -367,15 +367,15 @@ module AsciidoctorRevealjs
       end
     end
 
-    private def convert_colist(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::List)
+    private def convert_colist(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::List)
       list = node
       id_a = id_attr(node)
 
       String.build do |io|
         io << %(<ol#{id_a} class="colist">\n)
         list.items.each do |item|
-          next unless item.is_a?(Asciidoctor::ListItem)
+          next unless item.is_a?(Asciicrystal::ListItem)
           io << "<li>" << (item.text || "") << "</li>\n"
         end
         io << "</ol>"
@@ -386,8 +386,8 @@ module AsciidoctorRevealjs
     # Table
     # ------------------------------------------------------------------ #
 
-    private def convert_table(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Table)
+    private def convert_table(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Table)
       table = node
       id_a = id_attr(node)
       role = node.role
@@ -413,7 +413,7 @@ module AsciidoctorRevealjs
       end
     end
 
-    private def render_table_section(io : IO, rows : Array(Array(Asciidoctor::Table::Cell)), tag : String, cell_tag : String) : Nil
+    private def render_table_section(io : IO, rows : Array(Array(Asciicrystal::Table::Cell)), tag : String, cell_tag : String) : Nil
       return if rows.empty?
       io << "<" << tag << ">\n"
       rows.each do |row|
@@ -428,8 +428,8 @@ module AsciidoctorRevealjs
     # Code blocks (listing, literal)
     # ------------------------------------------------------------------ #
 
-    private def convert_listing(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Block)
+    private def convert_listing(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Block)
       block = node
       id_a = id_attr(node)
       frag = fragment_attr(node)
@@ -443,8 +443,8 @@ module AsciidoctorRevealjs
       end
     end
 
-    private def convert_literal(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Block)
+    private def convert_literal(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Block)
       block = node
       id_a = id_attr(node)
       frag = fragment_attr(node)
@@ -456,8 +456,8 @@ module AsciidoctorRevealjs
     # Admonition -> speaker notes or styled block
     # ------------------------------------------------------------------ #
 
-    private def convert_admonition(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Block)
+    private def convert_admonition(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Block)
       block = node
       style = (block.attr("style") || block.attr("name") || "note").to_s.downcase
       role = block.role
@@ -478,8 +478,8 @@ module AsciidoctorRevealjs
     # Image
     # ------------------------------------------------------------------ #
 
-    private def convert_image(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Block)
+    private def convert_image(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Block)
       block = node
       target = block.attr("target") || ""
       alt = block.attr("alt") || ""
@@ -513,8 +513,8 @@ module AsciidoctorRevealjs
     # Quote & Verse
     # ------------------------------------------------------------------ #
 
-    private def convert_quote(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Block)
+    private def convert_quote(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Block)
       block = node
       id_a = id_attr(node)
       frag = fragment_attr(node)
@@ -539,8 +539,8 @@ module AsciidoctorRevealjs
       end
     end
 
-    private def convert_verse(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Block)
+    private def convert_verse(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Block)
       block = node
       id_a = id_attr(node)
       frag = fragment_attr(node)
@@ -552,8 +552,8 @@ module AsciidoctorRevealjs
     # Example, Sidebar, Open, Preamble, Stem
     # ------------------------------------------------------------------ #
 
-    private def convert_block_generic(node : Asciidoctor::AbstractNode, css_class : String) : String
-      return "" unless node.is_a?(Asciidoctor::Block)
+    private def convert_block_generic(node : Asciicrystal::AbstractNode, css_class : String) : String
+      return "" unless node.is_a?(Asciicrystal::Block)
       block = node
       id_a = id_attr(node)
       frag = fragment_attr(node)
@@ -569,8 +569,8 @@ module AsciidoctorRevealjs
       end
     end
 
-    private def convert_sidebar(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Block)
+    private def convert_sidebar(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Block)
       block = node
       id_a = id_attr(node)
       frag = fragment_attr(node)
@@ -586,8 +586,8 @@ module AsciidoctorRevealjs
       end
     end
 
-    private def convert_open(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Block)
+    private def convert_open(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Block)
       block = node
       role = block.role
 
@@ -604,18 +604,18 @@ module AsciidoctorRevealjs
       "<div#{id_a}#{cls}#{frag}>\n#{content}\n</div>"
     end
 
-    private def convert_preamble(node : Asciidoctor::AbstractNode) : String
-      if node.is_a?(Asciidoctor::Block)
+    private def convert_preamble(node : Asciicrystal::AbstractNode) : String
+      if node.is_a?(Asciicrystal::Block)
         (node.content || "").to_s
-      elsif node.is_a?(Asciidoctor::AbstractBlock)
+      elsif node.is_a?(Asciicrystal::AbstractBlock)
         (node.content || "").to_s
       else
         ""
       end
     end
 
-    private def convert_stem(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Block)
+    private def convert_stem(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Block)
       block = node
       id_a = id_attr(node)
       frag = fragment_attr(node)
@@ -623,8 +623,8 @@ module AsciidoctorRevealjs
       %(<div#{id_a} class="stemblock"#{frag}>\n#{content}\n</div>)
     end
 
-    private def convert_floating_title(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::AbstractBlock)
+    private def convert_floating_title(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::AbstractBlock)
       level = node.level
       h = {level, 6}.min
       id_a = id_attr(node)
@@ -636,8 +636,8 @@ module AsciidoctorRevealjs
     # Inline elements
     # ------------------------------------------------------------------ #
 
-    private def convert_inline_anchor(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Inline)
+    private def convert_inline_anchor(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Inline)
       inline = node
       case inline.type
       when :xref
@@ -662,45 +662,45 @@ module AsciidoctorRevealjs
       end
     end
 
-    private def convert_inline_break(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Inline)
+    private def convert_inline_break(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Inline)
       "#{node.text || ""}<br>"
     end
 
-    private def convert_inline_button(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Inline)
+    private def convert_inline_button(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Inline)
       %(<b class="button">#{node.text || ""}</b>)
     end
 
-    private def convert_inline_callout(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Inline)
+    private def convert_inline_callout(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Inline)
       %(<i class="conum" data-value="#{esc(node.text || "")}"></i>)
     end
 
-    private def convert_inline_footnote(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Inline)
+    private def convert_inline_footnote(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Inline)
       %(<sup class="footnote">[#{node.text || ""}]</sup>)
     end
 
-    private def convert_inline_image(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Inline)
+    private def convert_inline_image(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Inline)
       target = node.target || ""
       alt = node.attr("alt") || ""
       %(<span class="image"><img src="#{esc(target)}" alt="#{esc(alt)}"></span>)
     end
 
-    private def convert_inline_kbd(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Inline)
+    private def convert_inline_kbd(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Inline)
       "<kbd>#{node.text || ""}</kbd>"
     end
 
-    private def convert_inline_menu(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Inline)
+    private def convert_inline_menu(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Inline)
       %(<span class="menuseq">#{node.text || ""}</span>)
     end
 
-    private def convert_inline_quoted(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Inline)
+    private def convert_inline_quoted(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Inline)
       inline = node
       text = inline.text || ""
       case inline.type
@@ -725,8 +725,8 @@ module AsciidoctorRevealjs
       end
     end
 
-    private def convert_video(node : Asciidoctor::AbstractNode) : String
-      return "" unless node.is_a?(Asciidoctor::Block)
+    private def convert_video(node : Asciicrystal::AbstractNode) : String
+      return "" unless node.is_a?(Asciicrystal::Block)
       block = node
       target = block.attr("target") || ""
       id_a = id_attr(node)
@@ -759,8 +759,8 @@ module AsciidoctorRevealjs
     # Helpers
     # ------------------------------------------------------------------ #
 
-    private def fragment_attr(node : Asciidoctor::AbstractNode) : String
-      if node.is_a?(Asciidoctor::AbstractBlock)
+    private def fragment_attr(node : Asciicrystal::AbstractNode) : String
+      if node.is_a?(Asciicrystal::AbstractBlock)
         if node.option?("step") || (node.role && node.role.not_nil!.includes?("fragment"))
           return %( class="fragment")
         end
@@ -768,7 +768,7 @@ module AsciidoctorRevealjs
       ""
     end
 
-    private def id_attr(node : Asciidoctor::AbstractNode) : String
+    private def id_attr(node : Asciicrystal::AbstractNode) : String
       if (id = node.id)
         %( id="#{esc(id)}")
       else
@@ -777,7 +777,7 @@ module AsciidoctorRevealjs
     end
 
     # Shortcut: doc.attr with guaranteed non-nil return.
-    private def s_attr(doc : Asciidoctor::Document, name : String, default : String) : String
+    private def s_attr(doc : Asciicrystal::Document, name : String, default : String) : String
       doc.attr(name, default) || default
     end
 

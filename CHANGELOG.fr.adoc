@@ -3,6 +3,10 @@
 :toc-title: Versions
 :toclevels: 2
 
+== v5.2.0.4 — 2026-07-29
+
+* Déplacement de la source CLI de `bin/asciicrystal-revealjs` vers `src/cli.cr` pour que `shards build` n'écrase plus la source par le binaire compilé ; `main` pointe désormais vers `src/cli.cr`.
+
 == v5.2.0.3 — 2026-07-28
 
 * Renommage du shard `crystal-asciidoctor-revealjs` → `asciicrystal-revealjs` (abandon du préfixe `crystal-`, `doctor` devient `crystal`).

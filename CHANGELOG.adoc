@@ -3,6 +3,10 @@
 :toc-title: Versions
 :toclevels: 2
 
+== v5.2.0.5 — 2026-07-29
+
+* Rename the internal source dir `src/asciidoctor_revealjs/` → `src/asciicrystal_revealjs/` (internal path; no API change). Ruby-gem provenance preserved.
+
 == v5.2.0.4 — 2026-07-29
 
 * Move the CLI source from `bin/asciicrystal-revealjs` to `src/cli.cr` so `shards build` no longer overwrites the source with the compiled binary; `main` now points to `src/cli.cr`.

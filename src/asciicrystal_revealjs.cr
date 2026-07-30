@@ -1,5 +1,5 @@
 require "asciicrystal"
-require "./asciidoctor_revealjs/converter"
+require "./asciicrystal_revealjs/converter"
 
 module AsciicrystalRevealjs
   # Lue au compile-time depuis `shard.yml` via le macro `read_file`.

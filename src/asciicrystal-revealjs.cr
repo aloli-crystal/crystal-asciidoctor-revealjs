@@ -1,1 +1,1 @@
-require "./asciidoctor_revealjs"
+require "./asciicrystal_revealjs"

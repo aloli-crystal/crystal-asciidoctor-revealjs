@@ -1,5 +1,5 @@
 #!/usr/bin/env crystal
-require "./asciidoctor_revealjs"
+require "./asciicrystal_revealjs"
 require "option_parser"
 
 input_file = ""

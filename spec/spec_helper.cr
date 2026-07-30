@@ -1,2 +1,2 @@
 require "spec"
-require "../src/asciidoctor_revealjs"
+require "../src/asciicrystal_revealjs"

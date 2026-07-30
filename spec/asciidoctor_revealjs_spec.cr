@@ -375,7 +375,7 @@ describe AsciicrystalRevealjs::Converter do
 
   describe "version" do
     it "has correct version" do
-      AsciicrystalRevealjs::VERSION.should eq("5.2.0.4")
+      AsciicrystalRevealjs::VERSION.should eq("5.2.0.5")
     end
   end
 end
